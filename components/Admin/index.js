@@ -1,6 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { billingData as initialData } from '../../data/billingData';
+import AddUserModal from "../_libs/AddUserModal"; // adjust path if needed
+import EditUserModal from "../_libs/EditUserModal";
+import UserBillsModal from "../_libs/UserBillsModal";
+import ConfirmDeleteModal from "../_libs/ConfirmDeleteModal";
+import AddPaymentModal from "../_libs/AddPaymentModal";
 
 export default function BillingApp({ customers }) {
   const [data, setData] = useState(customers);
@@ -162,7 +167,7 @@ export default function BillingApp({ customers }) {
   }
 
   return (
-    <div style={{ padding: '30px', fontFamily: 'Segoe UI, sans-serif', background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ padding: '10px', fontFamily: 'Segoe UI, sans-serif', background: '#f9fafb', minHeight: '100vh' }}>
       <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '20px', textAlign: 'center', color: '#111827' }}>
         📊 Skynet Billing Dashboard
       </h1>
@@ -378,87 +383,47 @@ export default function BillingApp({ customers }) {
 
       {/* Payment Modal */}
       {paymentModal.show && (
-        <Modal onClose={() => setPaymentModal({ show: false, user: null, amount: '' })} title="Add Payment">
-          <input
-            type="number"
-            placeholder="Enter amount"
-            value={paymentModal.amount}
-            onChange={(e) => setPaymentModal({ ...paymentModal, amount: e.target.value })}
-            style={modalInputStyle}
-          />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-            <button style={modalBtnCancel} onClick={() => setPaymentModal({ show: false, user: null, amount: '' })}>Cancel</button>
-            <button style={modalBtnSave} onClick={handleAddPayment}>Add Payment</button>
-          </div>
-        </Modal>
+        <AddPaymentModal
+          paymentModal={paymentModal}
+          setPaymentModal={setPaymentModal}
+          handleAddPayment={handleAddPayment}
+        />
       )}
 
       {/* Add User Modal */}
       {addModal && (
-        <Modal onClose={() => setAddModal(false)} title="Add New User">
-          <input placeholder="Name" value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} style={modalInputStyle} />
-          <input placeholder="Phone" value={newUser.phone} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} style={modalInputStyle} />
-          <input placeholder="IP" value={newUser.ip} onChange={(e) => setNewUser({ ...newUser, ip: e.target.value })} style={modalInputStyle} />
-          <input placeholder="Bari-Wala" value={newUser.address} onChange={(e) => setNewUser({ ...newUser, address: e.target.value })} style={modalInputStyle} />
-          <input placeholder="details" value={newUser.details} onChange={(e) => setNewUser({ ...newUser, details: e.target.value })} style={modalInputStyle} />
-          <input placeholder="information" value={newUser.information} onChange={(e) => setNewUser({ ...newUser, information: e.target.value })} style={modalInputStyle} />
-          <input placeholder="Line Taken Date" value={newUser.lineTakenDate} onChange={(e) => setNewUser({ ...newUser, lineTakenDate: e.target.value })} style={modalInputStyle} />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-            <button style={modalBtnCancel} onClick={() => setAddModal(false)}>Cancel</button>
-            <button style={modalBtnSave} onClick={handleAddUser}>Add</button>
-          </div>
-        </Modal>
+        <AddUserModal
+          onClose={() => setAddModal(false)}
+          newUser={newUser}
+          setNewUser={setNewUser}
+          handleAddUser={handleAddUser}
+        />
       )}
 
       {/* Edit Modal */}
       {editModal.show && (
-        <Modal onClose={() => setEditModal({ show: false, userId: null, field: '', value: '' })} title="Edit Field">
-          <input
-            type="text"
-            value={editModal.value}
-            onChange={e => setEditModal({ ...editModal, value: e.target.value })}
-            style={modalInputStyle}
-          />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-            <button style={modalBtnCancel} onClick={() => setEditModal({ show: false, userId: null, field: '', value: '' })}>Cancel</button>
-            <button style={modalBtnSave} onClick={saveEdit}>Save</button>
-          </div>
-        </Modal>
+        <EditUserModal
+          editModal={editModal}
+          setEditModal={setEditModal}
+          saveEdit={saveEdit}
+        />
       )}
 
       {/* Details Modal (Show More) */}
       {detailsModal.show && (
-        <Modal onClose={() => setDetailsModal({ show: false, user: null })} title={`All Bills — ${detailsModal.user?.name || ''}`}>
-          {(detailsModal.user?.bills || []).map((bill, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                border: '1px solid #e5e7eb',
-                borderRadius: '6px',
-                padding: '10px 12px',
-                marginBottom: '8px',
-                background: '#f9fafb'
-              }}
-            >
-              <span style={{ flex: 1, fontWeight: '500' }}>{bill.takenBy || '-'}</span>
-              <span style={{ flex: 1, textAlign: 'center', fontSize: '13px', color: '#555' }}>{bill.dateCollected}</span>
-              <span style={{ flex: 1, textAlign: 'right', fontWeight: '600', color: '#16a34a' }}>{bill.summary}</span>
-            </div>
-          ))}
-        </Modal>
+        <UserBillsModal
+          detailsModal={detailsModal}
+          setDetailsModal={setDetailsModal}
+        />
       )}
 
       {/* Delete Modal */}
       {confirmDelete.show && (
-        <Modal onClose={() => setConfirmDelete({ show: false, user: null })} title="Confirm Delete">
-          <p>⚠️ Are you sure you want to delete <b>{confirmDelete.user?.name}</b>?</p>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-            <button style={modalBtnCancel} onClick={() => setConfirmDelete({ show: false, user: null })}>Cancel</button>
-            <button style={deleteBtnStyle} onClick={handleDelete}>Yes, Delete</button>
-          </div>
-        </Modal>
+        <ConfirmDeleteModal
+          confirmDelete={confirmDelete}
+          setConfirmDelete={setConfirmDelete}
+          handleDelete={handleDelete}
+        />
       )}
     </div>
   );
