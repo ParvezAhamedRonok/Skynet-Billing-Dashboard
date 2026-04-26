@@ -7,6 +7,12 @@ import UserBillsModal from "../_libs/UserBillsModal";
 import ConfirmDeleteModal from "../_libs/ConfirmDeleteModal";
 import AddPaymentModal from "../_libs/AddPaymentModal";
 
+// import UserBillsModal from "../_libs/UserBillsModal";
+// import ConfirmDeleteModal from "../_libs/ConfirmDeleteModal";
+// import AddPaymentModal from "../_libs/AddPaymentModal";
+
+
+
 export default function BillingApp({ customers }) {
   const [data, setData] = useState(customers);
   const [searchTerm, setSearchTerm] = useState('');
